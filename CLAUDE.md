@@ -48,6 +48,23 @@ If those paths are missing, stop and ask me to clone `kritvo-api` next to this r
 - No secrets in code; only `VITE_*` variables reach the browser, so never put secrets in them.
 - Never edit files in `../kritvo-api` from this repository.
 
+## Session rules
+
+- "start TASK-###": run `/task-start`. Read the task in `../kritvo-api/docs/planning/TASKS.md`
+  and its detail in `../kritvo-api/docs/architecture/LLD.md`, check dependencies, create the
+  branch, then show a short plan and wait for approval before writing code.
+- "finish the task": run `/task-finish`. Only these two skills exist in this repo.
+- Explain actions in plain language, a couple of sentences at a time; assume a non-developer
+  audience and give a one-line explanation for any jargon.
+- Ask one question at a time. Never ask the user to paste specs already readable from the docs.
+- PR/commit titles: `type(scope): summary (TASK-###)`. PR body: `Closes #<issue>` if the task
+  is fully done, `Refs #<issue>` if partial — web task issues live in this repo. Use the full
+  `AbhishekKumarSingh07/kritvo-api#<issue>` form only when the issue itself lives in kritvo-api
+  (e.g. TASK-000).
+- Never edit files in `../kritvo-api` from this repository, and never push or merge without asking.
+- On failure, show the error in plain language with the likely cause and options, before
+  changing anything.
+
 ## Git safety
 
 - Never force-push, rewrite published history, or delete tags.
