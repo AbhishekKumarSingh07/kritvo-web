@@ -1,0 +1,82 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Skip until TASK-023 adds package.json
+        id: guard
+        run: |
+          if [ -f package.json ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No package.json yet; skipping web checks"
+          fi
+
+      - if: steps.guard.outputs.present == 'true'
+        uses: pnpm/action-setup@v6
+      - if: steps.guard.outputs.present == 'true'
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - if: steps.guard.outputs.present == 'true'
+        run: pnpm install --frozen-lockfile
+      - if: steps.guard.outputs.present == 'true'
+        run: pnpm lint
+      - if: steps.guard.outputs.present == 'true'
+        run: pnpm typecheck
+      - if: steps.guard.outputs.present == 'true'
+        run: pnpm test
+      - if: steps.guard.outputs.present == 'true'
+        run: pnpm build
+
+  # Checks that generated API types match kritvo-api's committed contract.
+  # Enable by adding the API_REPO_READ_TOKEN secret (read-only access to kritvo-api)
+  # and the repository variable API_CONTRACT_CHECK=true.
+  api-contract:
+    name: api-contract
+    if: vars.API_CONTRACT_CHECK == 'true'
+    runs-on: ubuntu-latest
+    env:
+      API_CONTRACT_PATH: kritvo-api-contract/openapi/openapi.json
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: ${{ github.repository_owner }}/kritvo-api
+          token: ${{ secrets.API_REPO_READ_TOKEN }}
+          path: kritvo-api-contract
+          sparse-checkout: openapi
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Generated API types match the contract
+        run: |
+          pnpm gen:api
+          if [ -n "$(git status --porcelain -- src)" ]; then
+            git status --short -- src
+            echo "::error::API types are out of date with kritvo-api. Run 'pnpm gen:api' and commit, or update the UI for the new contract."
+            exit 1
+          fi
+      - name: Types still compile
+        run: pnpm typecheck
