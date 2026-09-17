@@ -18,34 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Skip until TASK-023 adds package.json
-        id: guard
-        run: |
-          if [ -f package.json ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::No package.json yet; skipping web checks"
-          fi
-
-      - if: steps.guard.outputs.present == 'true'
-        uses: pnpm/action-setup@v6
-      - if: steps.guard.outputs.present == 'true'
-        uses: actions/setup-node@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
-      - if: steps.guard.outputs.present == 'true'
-        run: pnpm install --frozen-lockfile
-      - if: steps.guard.outputs.present == 'true'
-        run: pnpm lint
-      - if: steps.guard.outputs.present == 'true'
-        run: pnpm typecheck
-      - if: steps.guard.outputs.present == 'true'
-        run: pnpm test
-      - if: steps.guard.outputs.present == 'true'
-        run: pnpm build
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
 
   # Checks that generated API types match kritvo-api's committed contract.
   # Enable by adding the API_REPO_READ_TOKEN secret (read-only access to kritvo-api)

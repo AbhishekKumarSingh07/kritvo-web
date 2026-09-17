@@ -2,8 +2,18 @@
 
 UI for Kritvo: the office web app, the technician PWA and the client portal, in one Vite + React + TypeScript app.
 
-> **Status:** Phase 0 (foundations). No application code yet; TASK-023 scaffolds the app.
+> **Status:** Phase 0 (foundations). Tooling scaffolded (TASK-023); office, PWA and portal screens land in later tasks.
 > **Licence:** Proprietary. All rights reserved.
+
+## Local setup
+
+1. Clone `kritvo-api` next to this repository (see below) and `kritvo-web`.
+2. Use Node from `.nvmrc` (`nvm use`), then `corepack enable`.
+3. `pnpm install`
+4. `cp .env.example .env.local` and adjust `VITE_API_BASE_URL` if needed.
+5. `pnpm gen:api` — generates TypeScript types from `../kritvo-api/openapi/openapi.json`.
+6. `pnpm dev` — starts the app at `http://localhost:5173`.
+7. `pnpm lint && pnpm typecheck && pnpm test && pnpm build` — the same checks CI runs.
 
 ## Where the docs are
 
@@ -27,7 +37,7 @@ git clone git@github.com:<you>/kritvo-web.git
 
 | Path | What lives there |
 | --- | --- |
-| `src/` | App code: office, PWA and portal route trees (TASK-023) |
+| `src/` | App entry, generated API client, i18n, offline outbox skeleton (TASK-023); office, PWA and portal route trees arrive with TASK-016/017/018 |
 | `docs/` | Pointer to the shared docs |
 | `.claude/`, `CLAUDE.md` | Instructions, rules and skills for Claude Code |
 | `.github/` | CI workflows, PR and issue templates |

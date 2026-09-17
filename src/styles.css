@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* CLAUDE.md: primary tap targets must be at least 48 x 48 px. */
+@utility tap-target {
+  min-height: 48px;
+  min-width: 48px;
+}

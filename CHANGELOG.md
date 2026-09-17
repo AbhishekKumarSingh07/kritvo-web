@@ -9,6 +9,7 @@ Each release notes the minimum `kritvo-api` version it needs.
 ### Added
 
 - Repository foundations: Claude Code instructions, rules and skills; GitHub templates; CI, PR-title, secret-scan and optional API-contract workflows (TASK-000).
+- Web app scaffolding: Vite + React + TypeScript strict, Tailwind, TanStack Query, ESLint/Prettier, Vitest + Testing Library, `pnpm gen:api` (openapi-typescript) generating types from `../kritvo-api/openapi/openapi.json`, a thin API client (bearer auth, `Idempotency-Key`, `If-Match`, RFC 9457 error parsing per LLD 5.1), and a minimal English/Hindi `useT()` helper (TASK-023). Requires `kritvo-api` >= the version committing `openapi/openapi.json` with `/healthz` and `/readyz` (already merged).
 
 ### Fixed
 
