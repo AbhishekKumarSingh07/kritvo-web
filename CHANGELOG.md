@@ -9,3 +9,7 @@ Each release notes the minimum `kritvo-api` version it needs.
 ### Added
 
 - Repository foundations: Claude Code instructions, rules and skills; GitHub templates; CI, PR-title, secret-scan and optional API-contract workflows (TASK-000).
+
+### Fixed
+
+- Set real code owners and grant `pull-requests: read` so gitleaks-action can list PR commits (TASK-000).
